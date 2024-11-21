@@ -1,12 +1,21 @@
 package com.py.net;
 
+import com.py.eventBus.AbsEvent;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static com.py.kit.ClassKit.scanPackage;
 
 @Slf4j
 public class VertxServer extends AbstractVerticle {
@@ -14,30 +23,48 @@ public class VertxServer extends AbstractVerticle {
     @Override
     public void start() {
         Router router = Router.router(vertx);
-        new PermittedOptions();
-
-        SockJSBridgeOptions opts = new SockJSBridgeOptions()
-                .addInboundPermitted(new PermittedOptions().setAddress("user:message"))
-                .addInboundPermitted(new PermittedOptions().setAddress("user:join"))
-                .addInboundPermitted(new PermittedOptions().setAddress("channel:switch"))
-                .addInboundPermitted(new PermittedOptions().setAddress("channel:create"))
-
-                .addOutboundPermitted(new PermittedOptions().setAddress("message"))
-                .addOutboundPermitted(new PermittedOptions().setAddress("user:joined"))
-                .addOutboundPermitted(new PermittedOptions().setAddress("user:left"))
-                .addOutboundPermitted(new PermittedOptions().setAddress("channel:created"))
-                ;
-
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
-        router.route("/ws*").subRouter(sockJSHandler.bridge(opts));
+        SockJSBridgeOptions opts = new SockJSBridgeOptions();
+        List<AbsEvent> events = getEvents("com.py.eventBus");
+        for (AbsEvent event : events) {
+            opts.addInboundPermitted(new PermittedOptions().setAddress(event.inbound()));
+            opts.addOutboundPermitted(new PermittedOptions().setAddress(event.outbound()));
+        }
+        router.route()
+                .handler(cros())
+                .subRouter(sockJSHandler.bridge(opts));
+        vertx.createHttpServer()
+                //跨域
+                .requestHandler(router)
+                .listen(8080)
+                .onSuccess(server -> log.info("HTTP server started on port {}", server.actualPort()));
+    }
 
-        vertx.createHttpServer().requestHandler(router).listen(8080);
+    private static CorsHandler cros() {
+        // 配置 CORS 中间件
+        return CorsHandler.create()
+                .allowedMethod(io.vertx.core.http.HttpMethod.GET)
+                .allowedMethod(io.vertx.core.http.HttpMethod.POST)
+                .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
+                .allowedMethod(io.vertx.core.http.HttpMethod.DELETE)
+                .allowedHeader("Content-Type")
+                .allowedHeader("Authorization")
+                .allowCredentials(true);
+    }
 
-        EventBus eb = vertx.eventBus();
-
-        eb.consumer("user:message", msg -> {
-
-        });
+    public List<AbsEvent> getEvents(String packageName) {
+        List<AbsEvent> events = new ArrayList<>();
+        Set<Class<?>> classes = scanPackage(packageName);
+        for (Class<?> clazz : classes) {
+            if (AbsEvent.class.isAssignableFrom(clazz) && clazz != AbsEvent.class) {
+                try {
+                    events.add((AbsEvent) clazz.getDeclaredConstructor(EventBus.class).newInstance(vertx.eventBus()));
+                } catch (Exception e) {
+                    log.error("Failed to create instance of class {}", clazz.getName(), e);
+                }
+            }
+        }
+        return events;
     }
 
 }

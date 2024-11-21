@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class Message {
+public class PyMessage {
     String id;
     String content;
     String sender;
