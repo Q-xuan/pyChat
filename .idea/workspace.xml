@@ -8431,15 +8431,18 @@
       <change afterPath="$PROJECT_DIR$/Client/tsconfig.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Client/tsconfig.node.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Client/vite.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/EventConstant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/chat/MessageEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/kit/ClassKit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/log4j2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/server/ChatServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/log4j.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Client" beforeDir="false" afterPath="$PROJECT_DIR$/Client" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/entity/PyMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/net/VertxServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/net/VertxServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/entity/PyMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/net/PyMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/AbsEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/AbsEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/chat/MessageEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/com/py/eventBus/chat/MessageEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/com/py/net/VertxServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/log4j2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -8455,7 +8458,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/Client" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -8587,7 +8590,8 @@
       <workItem from="1731893176839" duration="13051000" />
       <workItem from="1731909477343" duration="11055000" />
       <workItem from="1731997923754" duration="642000" />
-      <workItem from="1732152344615" duration="5521000" />
+      <workItem from="1732152344615" duration="5696000" />
+      <workItem from="1732174482110" duration="9814000" />
     </task>
     <task id="LOCAL-00001" summary="init project">
       <option name="closed" value="true" />

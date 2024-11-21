@@ -1,6 +1,6 @@
 package com.py.eventBus.chat;
 
-import com.py.entity.PyMessage;
+import com.py.net.PyMessage;
 import com.py.eventBus.AbsEvent;
 import com.py.eventBus.EventConstant;
 import io.vertx.core.Handler;
@@ -11,6 +11,7 @@ public class MessageEvent extends AbsEvent {
 
     public MessageEvent(EventBus eventBus) {
         super(eventBus);
+        super.register();
     }
 
     @Override

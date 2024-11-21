@@ -1,4 +1,4 @@
-package com.py.entity;
+package com.py.net;
 
 import lombok.AccessLevel;
 import lombok.Data;

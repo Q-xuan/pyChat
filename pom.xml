@@ -18,6 +18,7 @@
         <junit.version>4.13.2</junit.version>
         <vertix.version>4.5.10</vertix.version>
         <lombok.version>1.18.34</lombok.version>
+        <sl4j.version>2.0.16</sl4j.version>
     </properties>
 
 
@@ -47,7 +48,12 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>2.0.16</version>
+                <version>${sl4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${sl4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
