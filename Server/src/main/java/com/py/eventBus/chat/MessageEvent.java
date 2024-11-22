@@ -1,40 +1,34 @@
 package com.py.eventBus.chat;
 
-import com.py.net.PyMessage;
+import com.alibaba.fastjson2.JSON;
+import com.py.entity.ChatMsg;
+import com.py.net.PyMsg;
 import com.py.eventBus.AbsEvent;
 import com.py.eventBus.EventConstant;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 
-public class MessageEvent extends AbsEvent {
+public class MessageEvent extends AbsEvent<ChatMsg> {
 
     public MessageEvent(EventBus eventBus) {
         super(eventBus);
-        super.register();
     }
 
     @Override
     public String getAddress() {
-        return inbound();
-    }
-
-    @Override
-    public Handler<Message<PyMessage>> getConsumer() {
-        return msg -> {
-            System.out.println(1123);
-        };
-    }
-
-
-    @Override
-    public String inbound() {
         return EventConstant.message_inbound;
     }
 
     @Override
-    public String outbound() {
-        return EventConstant.message_outbound;
+    public Handler<Message<ChatMsg>> getConsumer() {
+        return msg -> {
+            ChatMsg body = msg.body();
+            if (body != null) {
+                System.out.println(body.getContent());
+            }
+            msg.reply(PyMsg.builder().cmd(EventConstant.message_outbound).content("rep" + body.getContent()).build());
+        };
     }
 
     @Override
