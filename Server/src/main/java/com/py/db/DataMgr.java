@@ -6,6 +6,8 @@ import com.py.entity.User;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,13 +24,30 @@ public class DataMgr {
     Map<String, ChatMsg> msgMap = new ConcurrentHashMap<>();
     @Getter
     Map<String, ChatChannel> channelMap = new ConcurrentHashMap<>();
+    @Getter
+    Map<ChatChannel, List<User>> channelUserMap = new ConcurrentHashMap<>();
+    @Getter
+    Map<String, String> wsMap = new ConcurrentHashMap<>();
 
+
+    public User addUser(User user) {
+        return userMap.putIfAbsent(user.getId(), user);
+    }
+
+    public List<User> joinDefault(User user) {
+        ChatChannel aDefault = channelMap.get("default");
+        List<User> users = channelUserMap.computeIfAbsent(aDefault, k -> new ArrayList<>());
+        users.add(user);
+        return users;
+    }
 
     @Getter
     private static final DataMgr instance = new DataMgr();
 
     private DataMgr() {
         // 私有构造函数，防止外部实例化
+        channelMap.put("default", new ChatChannel("default", "General", "通用讨论"));
+        channelMap.put("random", new ChatChannel("random", "Random", "随意聊天"));
     }
 
 

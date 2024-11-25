@@ -13,5 +13,5 @@ public class PyMsg {
     public static final int HEADER_LENGTH = 16;
 
     String cmd;
-    String content;
+    Object content;
 }

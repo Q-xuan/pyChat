@@ -27,7 +27,7 @@ public class MessageEvent extends AbsEvent<ChatMsg> {
             if (body != null) {
                 System.out.println(body.getContent());
             }
-            msg.reply(PyMsg.builder().cmd(EventConstant.message_outbound).content("rep" + body.getContent()).build());
+            msg.reply(body.getContent());
         };
     }
 

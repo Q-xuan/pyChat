@@ -1,5 +1,7 @@
 package com.py.entity;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import io.vertx.core.http.ServerWebSocket;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
@@ -13,4 +15,7 @@ public class User {
     String id;
     String username;
     String isOnline;
+
+    @JSONField(serialize = false)
+    ServerWebSocket ws;
 }

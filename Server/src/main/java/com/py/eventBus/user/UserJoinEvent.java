@@ -9,6 +9,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,9 +31,12 @@ public class UserJoinEvent extends AbsEvent<User> {
     public Handler<Message<User>> getConsumer() {
         return msg -> {
             User user = msg.body();
-            Map<String, User> userMap = DataMgr.getInstance().getUserMap();
+            msg.headers();
+            DataMgr dataMgr = DataMgr.getInstance();
+            Map<String, User> userMap = dataMgr.getUserMap();
             userMap.computeIfAbsent(user.getId(), k -> user);
-            msg.reply(user);
+            List<User> users = dataMgr.joinDefault(user);
+            msg.reply(users);
         };
     }
 }
