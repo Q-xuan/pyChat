@@ -319,9 +319,9 @@ io.vertx.core.VertxException: Thread blocked
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:1570)
 [ INFO - 2024-11-21 16:43:39] [Thread: vert.x-eventloop-thread-0] [Class: com.py.net.VertxServer] [Method: initEvents] [Line: 64] - ERROR: EventBus init success
-[ INFO - 2024-11-21 16:44:53] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 29] - ERROR: register eventBus address:user:message
+[ INFO - 2024-11-21 16:44:53] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 29] - ERROR: register eventBus address:user:message
 [ INFO - 2024-11-21 16:44:53] [Thread: vert.x-eventloop-thread-0] [Class: com.py.net.VertxServer] [Method: initEvents] [Line: 64] - ERROR: EventBus init success
-[ INFO - 2024-11-21 16:52:43] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 29] - ERROR: register success - user:message
+[ INFO - 2024-11-21 16:52:43] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 29] - ERROR: register success - user:message
 [ INFO - 2024-11-21 16:52:43] [Thread: vert.x-eventloop-thread-0] [Class: com.py.net.VertxServer] [Method: initEvents] [Line: 69] - ERROR: EventBus init success
 [ INFO - 2024-11-21 16:52:44] [Thread: vert.x-eventloop-thread-0] [Class: com.py.net.VertxServer] [Method: lambda$start$0] [Line: 39] - ERROR: HTTP server started on port 8080
 [DEBUG - 2024-11-21 17:04:49] [Thread: main] [Class: ?] [Method: ?] [Line: ?] - ERROR: Using io.vertx.core.logging.SLF4JLogDelegateFactory
@@ -364,7 +364,7 @@ io.vertx.core.VertxException: Thread blocked
 [DEBUG - 2024-11-21 17:04:50] [Thread: main] [Class: io.netty.resolver.dns.DnsNameResolver] [Method: <clinit>] [Line: 170] - ERROR: Default search domains: []
 [DEBUG - 2024-11-21 17:04:50] [Thread: main] [Class: io.netty.resolver.dns.DnsNameResolver] [Method: <clinit>] [Line: 179] - ERROR: Default UnixResolverOptions{ndots=1, timeout=5, attempts=16}
 [DEBUG - 2024-11-21 17:04:50] [Thread: main] [Class: io.netty.resolver.DefaultHostsFileEntriesResolver] [Method: <clinit>] [Line: 53] - ERROR: -Dio.netty.hostsFileRefreshInterval: 0
-[ INFO - 2024-11-21 17:04:51] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 29] - ERROR: register success - user:message
+[ INFO - 2024-11-21 17:04:51] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 29] - ERROR: register success - user:message
 [ INFO - 2024-11-21 17:04:51] [Thread: vert.x-eventloop-thread-0] [Class: com.py.net.VertxServer] [Method: initEvents] [Line: 69] - ERROR: EventBus init success
 [DEBUG - 2024-11-21 17:04:51] [Thread: vert.x-eventloop-thread-0] [Class: io.netty.buffer.PooledByteBufAllocator] [Method: <clinit>] [Line: 157] - ERROR: -Dio.netty.allocator.numHeapArenas: 24
 [DEBUG - 2024-11-21 17:04:51] [Thread: vert.x-eventloop-thread-0] [Class: io.netty.buffer.PooledByteBufAllocator] [Method: <clinit>] [Line: 158] - ERROR: -Dio.netty.allocator.numDirectArenas: 24
@@ -687,9 +687,9 @@ io.vertx.core.json.DecodeException: Failed to decode
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:1570)
-[ INFO - 2024-11-21 17:55:56] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 28] - ERROR: register success - user:message
+[ INFO - 2024-11-21 17:55:56] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 28] - ERROR: register success - user:message
 [ INFO - 2024-11-21 17:55:57] [Thread: vert.x-eventloop-thread-0] [Class: com.py.server.ChatServer] [Method: lambda$start$3] [Line: 57] - ERROR: server start:8080
-[ INFO - 2024-11-21 17:58:54] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 28] - ERROR: register success - user:message
+[ INFO - 2024-11-21 17:58:54] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 28] - ERROR: register success - user:message
 [ INFO - 2024-11-21 17:58:54] [Thread: vert.x-eventloop-thread-0] [Class: com.py.server.ChatServer] [Method: lambda$start$3] [Line: 59] - ERROR: server start:8080
-[ INFO - 2024-11-21 18:04:41] [Thread: vert.x-eventloop-thread-0] [Class: com.py.eventBus.AbsEvent] [Method: register] [Line: 28] - ERROR: register success - user:message
+[ INFO - 2024-11-21 18:04:41] [Thread: vert.x-eventloop-thread-0] [Class: com.py.core.BaseHandler] [Method: register] [Line: 28] - ERROR: register success - user:message
 [ INFO - 2024-11-21 18:04:42] [Thread: vert.x-eventloop-thread-0] [Class: com.py.server.ChatServer] [Method: lambda$start$3] [Line: 59] - ERROR: server start:8080

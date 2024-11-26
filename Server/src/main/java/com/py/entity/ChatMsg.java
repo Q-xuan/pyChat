@@ -10,5 +10,6 @@ public class ChatMsg {
     String id;
     String content;
     String sender;
+    long timestamp;
     String channelId;
 }

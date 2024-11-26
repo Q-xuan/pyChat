@@ -3,7 +3,6 @@ package com.py.db;
 import com.py.entity.ChatChannel;
 import com.py.entity.ChatMsg;
 import com.py.entity.User;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -26,18 +25,22 @@ public class DataMgr {
     Map<String, ChatChannel> channelMap = new ConcurrentHashMap<>();
     @Getter
     Map<ChatChannel, List<User>> channelUserMap = new ConcurrentHashMap<>();
-    @Getter
-    Map<String, String> wsMap = new ConcurrentHashMap<>();
 
 
-    public User addUser(User user) {
-        return userMap.putIfAbsent(user.getId(), user);
+    public void addUser(User user) {
+        userMap.putIfAbsent(user.getId(), user);
+    }
+
+    public void removeUser(User user) {
+        userMap.remove(user.getId());
     }
 
     public List<User> joinDefault(User user) {
         ChatChannel aDefault = channelMap.get("default");
         List<User> users = channelUserMap.computeIfAbsent(aDefault, k -> new ArrayList<>());
-        users.add(user);
+        if (!users.contains(user)) {
+            users.add(user);
+        }
         return users;
     }
 

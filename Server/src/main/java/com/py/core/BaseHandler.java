@@ -1,9 +1,7 @@
-package com.py.eventBus;
+package com.py.core;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import com.py.db.DataMgr;
-import com.py.net.EventMsg;
 import com.py.net.PyMsg;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -11,31 +9,28 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.eventbus.impl.CodecManager;
-import io.vertx.core.eventbus.impl.EventBusImpl;
-import io.vertx.core.eventbus.impl.MessageImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 @Slf4j
-public abstract class AbsEvent<T> {
+public abstract class BaseHandler<T> {
 
     protected final EventBus eventBus;
 
-    public AbsEvent(EventBus eventBus) {
+    public BaseHandler(EventBus eventBus) {
         this.eventBus = eventBus;
         register();
     }
 
-    public abstract String getAddress();
+    public abstract String address();
 
     public Handler<Message<String>> baseConsumer() {
         return msg -> {
             T event = parseJsonToType(msg.body(), getGenericType());
             Message<T> newMsg = copyMsg(msg, event);
-            getConsumer().handle(newMsg);
+            consumer().handle(newMsg);
         };
     }
 
@@ -87,7 +82,7 @@ public abstract class AbsEvent<T> {
 
             @Override
             public void reply(Object message, DeliveryOptions options) {
-                PyMsg output = PyMsg.builder().cmd(getAddress()).content(message).build();
+                PyMsg output = PyMsg.builder().cmd(address()).content(message).build();
                 msg.reply(JSON.toJSONString(output), options);
             }
 
@@ -98,10 +93,10 @@ public abstract class AbsEvent<T> {
         };
     }
 
-    public abstract Handler<Message<T>> getConsumer();
+    public abstract Handler<Message<T>> consumer();
 
     public void register() {
-        eventBus.consumer(getAddress(), baseConsumer());
-        log.info("register success - {}", getAddress());
+        eventBus.consumer(address(), baseConsumer());
+        log.info("register success - {}", address());
     }
 }

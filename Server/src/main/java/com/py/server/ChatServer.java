@@ -3,27 +3,19 @@ package com.py.server;
 import com.alibaba.fastjson2.JSON;
 import com.py.db.DataMgr;
 import com.py.entity.User;
-import com.py.eventBus.AbsEvent;
-import com.py.kit.ClassKit;
-import com.py.net.AutoTypeMsgCodec;
+import com.py.core.BaseHandler;
+import com.py.core.kit.ClassKit;
 import com.py.net.PyMsg;
-import com.py.net.PyMsgCodec;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.eventbus.impl.codecs.SerializableCodec;
-import io.vertx.core.eventbus.impl.codecs.StringMessageCodec;
 import io.vertx.core.http.*;
-import io.vertx.core.shareddata.SharedData;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author py
@@ -33,34 +25,59 @@ import java.util.Set;
 public class ChatServer extends AbstractVerticle {
 
     @Override
-    public void start() throws Exception {
-        HttpServer server = vertx.createHttpServer();
-        HttpServerOptions ops = new HttpServerOptions();
-
-
+    public void start() {
+        HttpServer server = vertx.createHttpServer(initOps());
         EventBus eventBus = vertx.eventBus();
-        eventBus.registerCodec(new AutoTypeMsgCodec());
-        initEvent(eventBus);
-        Router router = Router.router(vertx);
-
+        //初始化handler
+        initHandler(eventBus);
+        Router router = initRouter();
         server.requestHandler(router);
-        server.webSocketHandler(handle -> {
-            log.info("new conn :{},id:{}", handle.remoteAddress(), handle.textHandlerID());
-            handle.frameHandler(frame -> {
-                handlerText(handle, frame, eventBus);
-            });
-
-        });
-
         server.listen(8080).onSuccess(suc -> {
             log.info("server start:{}", suc.actualPort());
         });
     }
 
-    private static void initEvent(EventBus eventBus) {
+    private Router initRouter() {
+        Router router = Router.router(vertx);
+        EventBus eventBus = vertx.eventBus();
+        router.route().handler(getHandler());
+
+        List<ServerWebSocket> sockets = new ArrayList<>();
+
+        router.route("/ws").handler(route -> {
+            HttpServerRequest request = route.request();
+            Future<ServerWebSocket> webSocket = request.toWebSocket();
+            webSocket.onSuccess(ws -> {
+                log.info("new conn :{},id:{}", ws.remoteAddress(), ws.textHandlerID());
+                ws.frameHandler(frame -> {
+                    if (frame.isText()) {
+                        handlerText(ws, frame, route);
+                        sockets.add(ws);
+                    }
+                });
+            });
+        });
+
+        eventBus.consumer("broadcast", msg -> {
+            log.info("broadcast:{}", msg.body());
+            sockets.forEach(ws -> {
+                ws.writeTextMessage((String) msg.body());
+            });
+        });
+        return router;
+    }
+
+    private static HttpServerOptions initOps() {
+        HttpServerOptions ops = new HttpServerOptions();
+        ops.setIdleTimeout(120);
+        ops.setRegisterWebSocketWriteHandlers(true);
+        return ops;
+    }
+
+    private static void initHandler(EventBus eventBus) {
         Set<Class<?>> classes = ClassKit.scanPackage("com.py.eventBus");
         classes.forEach(clazz -> {
-            if (AbsEvent.class.isAssignableFrom(clazz) && clazz != AbsEvent.class) {
+            if (BaseHandler.class.isAssignableFrom(clazz) && clazz != BaseHandler.class) {
                 try {
                     clazz.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
                 } catch (Exception e) {
@@ -70,7 +87,8 @@ public class ChatServer extends AbstractVerticle {
         });
     }
 
-    private static void handlerText(ServerWebSocket handle, WebSocketFrame frame, EventBus eventBus) {
+    private static void handlerText(ServerWebSocket handle, WebSocketFrame frame, RoutingContext route) {
+        EventBus eventBus = route.vertx().eventBus();
         log.info("ReqData:{}", frame.textData());
         if (!frame.isText()) return;
         PyMsg pyMessage = JSON.to(PyMsg.class, frame.textData());
@@ -80,19 +98,20 @@ public class ChatServer extends AbstractVerticle {
             DataMgr dataMgr = DataMgr.getInstance();
             user.setWs(handle);
             dataMgr.addUser(user);
-
-            List<User> users = dataMgr.joinDefault(user);
-            String resp = JSON.toJSONString(users);
-            log.info("resp - cmd:[{}] resp:[{}]", pyMessage.getCmd(), resp);
-        } else {
-            eventBus.request(pyMessage.getCmd(), pyMessage.getContent().toString(), reply -> {
-                if (reply.succeeded()) {
-                    String resp = (String) reply.result().body();
-                    handle.writeTextMessage(resp);
-                    log.info("resp - cmd:[{}] resp:[{}]", pyMessage.getCmd(), resp);
-                }
+            //关闭连接
+            handle.closeHandler(ar -> {
+                dataMgr.removeUser(user);
+                log.info("close conn:{}", user.getUsername());
             });
         }
+        eventBus.request(pyMessage.getCmd(), pyMessage.getContent().toString(),
+                reply -> {
+                    if (reply.succeeded()) {
+                        String resp = (String) reply.result().body();
+                        handle.writeTextMessage(resp);
+                        log.info("resp - cmd:[{}] resp:[{}]", pyMessage.getCmd(), resp);
+                    }
+                });
     }
 
     public static CorsHandler getHandler() {

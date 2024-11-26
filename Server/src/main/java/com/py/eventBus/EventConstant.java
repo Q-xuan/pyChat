@@ -2,16 +2,15 @@ package com.py.eventBus;
 
 public class EventConstant {
 
+    public static final String broadcast = "broadcast";
+
     //message
-    public static final String message_inbound = "user:message";
-    public static final String message_outbound = "message";
+    public static final String userMessage = "user:message";
 
     //channel
-    public static final String join_inbound = "user:join";
-    public static final String join_outbound = "user:joined";
-    public static final String switch_inbound = "channel:switch";
-    public static final String leave_outbound = "user:left";
-    public static final String channelCreate_inbound = "channel:create";
-    public static final String channelCreate_outbound = "channel:created";
+    public static final String userJoin = "user:join";
+    public static final String channelSwitch = "channel:switch";
+    public static final String userLeft = "user:left";
+    public static final String channelCreate = "channel:create";
 
 }

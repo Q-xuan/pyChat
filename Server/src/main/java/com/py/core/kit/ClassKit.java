@@ -1,12 +1,10 @@
-package com.py.kit;
+package com.py.core.kit;
 
-import com.py.eventBus.AbsEvent;
+import com.py.core.BaseHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 
@@ -78,7 +76,7 @@ public class ClassKit {
     public static void main(String[] args) {
         Set<Class<?>> classes = scanPackage("com.py.eventBus");
         for (Class<?> clazz : classes) {
-            if (AbsEvent.class.isAssignableFrom(clazz) && clazz != AbsEvent.class) {
+            if (BaseHandler.class.isAssignableFrom(clazz) && clazz != BaseHandler.class) {
                 System.out.println(clazz.getName());
             }
         }
